@@ -1,4 +1,5 @@
-import os
 from dotenv import load_dotenv
 
-load_dotenv(os.path.join(os.getcwd(), '.env'))
+load_dotenv()
+
+bind = "0.0.0.0:5000"

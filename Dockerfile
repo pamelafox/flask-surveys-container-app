@@ -27,4 +27,4 @@ EXPOSE 5000
 
 # During debugging, this entry point will be overridden.
 # For more information, please refer to https://aka.ms/vscode-docker-python-debug
-ENTRYPOINT ["gunicorn", "-c", "gunicorn.conf.py", "--bind", "0.0.0.0:5000", "app:app"]
+ENTRYPOINT ["gunicorn", "-c", "gunicorn.conf.py", "app:app"]
