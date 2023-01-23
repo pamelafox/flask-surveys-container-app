@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Survey: {{ survey.topic }}{% endblock %}
+{% block content %}
+  <h2>Survey: {{ survey.topic }}</h2> 
+
+  {% if not already_voted %}
+  <section class="row">
+
+  <form method="POST" action="{{ url_for('answers_create_handler', survey_id=survey.id) }}">
+    <fieldset class="form-group">
+      <legend>{{survey.question}}</legend>
+        <!-- Loop through the survey options and create radio buttons -->
+        {% for option in survey.options_list %}
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="radio" name="option" id="option{{ loop.index0 }}" value="{{ option }}">
+          <label class="form-check-label" for="option{{ loop.index0 }}">
+            {{ option }}
+          </label>
+        </div>
+        {% endfor %}
+      </fieldset>
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="cancel" class="btn btn-warning">Cancel</button>
+  </form>
+  </section>
+ {% else %}
+  <section>
+    <p>Here are the results of the survey:</p>
+    <table class="table survey-results-table">
+      <thead>
+        <tr>
+          <th>Option</th>
+          <th>Count</th>
+          <th>Percentage</th>
+        </tr>
+      <tbody>
+      {% for option, stats in survey.option_stats.items() %}
+        <tr>
+          <td>{{ option }}</td>
+          <td>{{ stats["count"] }}</td>
+          <td>
+            {% if stats["count"] > 0 %}
+            <div class="survey-results-bar" style="width:{{ stats["percent"] * 2 }}px; background: #ccc;">{{ stats["percent"] }}%</div>
+            {% else %}
+            <div class="survey-results-bar">0%</div>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+ {% endif %}
+
+
+
+  </section>
+{% endblock %}

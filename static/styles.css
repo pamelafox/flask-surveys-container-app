@@ -1,0 +1,18 @@
+body {
+    min-height: 75rem;
+    padding-top: 4.5rem;
+}
+
+.surveys-list-table {
+  max-width: 650px;
+}
+
+.survey-results-bar {
+  height: 50px;
+  padding: 10px;
+}
+
+.survey-results-table {
+  height: 50px;
+  padding: 10px;
+}
