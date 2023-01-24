@@ -31,6 +31,23 @@ flask db upgrade
 flask run
 ```
 
+### Local Docker usage
+
+docker build --tag flask-app .
+
+docker run -p 5000:5000 flask-app
+
+
+docker volume create postgres-data
+
+docker network create postgres-net
+
+docker run --rm -d -v postgres-data:/var/lib/postgresql/data --network postgres-net --name db -e POSTGRES_USER=app_user -e POSTGRES_PASSWORD=app_password -e POSTGRES_DB=postgres postgres 
+
+docker exec -ti db psql -U app_user
+
+docker run --rm -d --network postgres-net --name flask-container -p 5000:5000 flask-app
+
 ### Deployment
 
 This repo is set up for deployment on Azure App Service (w/PostGreSQL server) using the configuration files in the `infra` folder.

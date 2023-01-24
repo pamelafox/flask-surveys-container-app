@@ -2,9 +2,10 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.245.0/containers/python-3
 {
 	"name": "flask-surveys-container-app",
-	"dockerComposeFile": "docker-compose.yaml",
-	"service": "app",
-	"workspaceFolder": "/workspace",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
 	"forwardPorts": [5000, 5432],
 	
     // https://github.com/devcontainers/features
