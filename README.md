@@ -31,28 +31,20 @@ flask db upgrade
 flask run
 ```
 
-### Local Docker usage
+### Local development with Docker
 
-docker build --tag flask-app .
+Since this app depends on a database, there's a docker-compose.yaml that creates two containers (one for the app, one for the DB)
+as well as a volume to store the database data.
 
-docker run -p 5000:5000 flask-app
+Start the services with this command:
 
-
-docker volume create postgres-data
-
-docker network create postgres-net
-
-docker run --rm -d -v postgres-data:/var/lib/postgresql/data --network postgres-net --name db -e POSTGRES_USER=app_user -e POSTGRES_PASSWORD=app_password -e POSTGRES_DB=postgres postgres 
-
-docker exec -ti db psql -U app_user
-
-docker run --rm -d --network postgres-net --name flask-container -p 5000:5000 flask-app
+```
+docker-compose up --build
+```
 
 ### Deployment
 
-This repo is set up for deployment on Azure App Service (w/PostGreSQL server) using the configuration files in the `infra` folder.
-
-🎥 [Watch a screencast of deploying and re-deploying the app.](https://www.youtube.com/watch?v=r6Hnp9RXUpY)
+This repo is set up for deployment on Azure Container Apps (w/PostGreSQL server) using the configuration files in the `infra` folder.
 
 Steps for deployment:
 
@@ -76,24 +68,6 @@ It will prompt you to login and to provide a name (like "flask-app") and locatio
 azd deploy
 ```
 
-### CI/CD pipeline
-
-This project includes a Github workflow for deploying the resources to Azure
-on every push. That workflow requires several Azure-related authentication secrets to be stored as Github action secrets. To set that up, run:
-
-```shell
-azd pipeline config
-```
-
-### Monitoring
-
-The deployed resources include a Log Analytics workspace with an Application Insights dashboard to measure metrics like server response time.
-
-To open that dashboard, just run:
-
-```shell
-azd monitor --overview
-```
 
 ## Getting help
 
