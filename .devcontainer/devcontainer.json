@@ -26,6 +26,7 @@
 				"ms-python.python",
 				"ms-python.vscode-pylance",
 				"ms-azuretools.vscode-docker",
+				"ms-azuretools.vscode-bicep",
 				"mtxr.sqltools",
 				"mtxr.sqltools-driver-pg"
 			],
