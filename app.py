@@ -1,16 +1,10 @@
-from datetime import datetime
 import os
+from datetime import datetime
 
-from flask import (
-    Flask,
-    render_template,
-    request,
-    redirect,
-    url_for,
-    send_from_directory,
-)
-from flask_sqlalchemy import SQLAlchemy
+from flask import (Flask, redirect, render_template, request,
+                   send_from_directory, url_for)
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from requests import RequestException
 
@@ -40,7 +34,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # The import must be done after db initialization due to circular import issue
-from models import Survey, Answer
+from models import Answer, Survey
 
 
 @app.route("/", methods=["GET"])
