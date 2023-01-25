@@ -33,8 +33,8 @@ flask run
 
 ### Local development with Docker
 
-Since this app depends on a database, there's a docker-compose.yaml that creates two containers (one for the app, one for the DB)
-as well as a volume to store the database data.
+Since this app depends on a database, there's a docker-compose.yaml that creates two containers
+(one for the app, one for the DB) as well as a volume to store the database data.
 
 Start the services with this command:
 
@@ -58,9 +58,7 @@ azd up
 
 It will prompt you to login and to provide a name (like "flask-app") and location (like "eastus"). Then it will provision the resources in your account and deploy the latest code. If you get an error with deployment, changing the location (like to "centralus") can help, as there are availability constraints for some of the resources.
 
-4. When `azd` has finished deploying, you'll see an endpoint URI in the command output. Visit that URI, and you should see the front page of the restaurant review app! 🎉 If you see an error, open the Azure Portal from the URL in the command output, navigate to the App Service, select Logstream, and check the logs for any errors.
-
-![Screenshot of Flask restaurants website](screenshot_website.png)
+4. When `azd` has finished deploying, you'll see an endpoint URI in the command output. Visit that URI, and you should see the front page of the app! 🎉
 
 5. When you've made any changes to the app code, you can just run:
 
