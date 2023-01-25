@@ -1,7 +1,6 @@
 import logging
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
-from sqlalchemy.orm import declarative_base, validates
+from sqlalchemy import Column, ForeignKey, Integer, String
 
 from app import db
 

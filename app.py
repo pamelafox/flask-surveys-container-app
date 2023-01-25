@@ -1,24 +1,23 @@
 import os
-from datetime import datetime
 
 from flask import (Flask, redirect, render_template, request,
                    send_from_directory, url_for)
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-from requests import RequestException
 
 app = Flask(__name__, static_folder="static")
 csrf = CSRFProtect(app)
 
-# If RUNNING_IN_PRODUCTION is defined as an environment variable, then we're running on Azure
-if not "RUNNING_IN_PRODUCTION" in os.environ:
+# If RUNNING_IN_PRODUCTION is defined, then we're running on Azure
+if "RUNNING_IN_PRODUCTION" not in os.environ:
     # Local development, where we'll use environment variables.
-    print("Loading config.development and environment variables from .env file.")
+    print("Loading settings.development and environment variables from .env")
     app.config.from_object("settings.development")
 else:
-    # Production, we don't load environment variables from .env file but add them as environment variables in Azure.
-    print("Loading config.production.")
+    # Production, where we don't load environment variables from .env file but
+    # instead add them as environment variables in Azure.
+    print("Loading settings.production")
     app.config.from_object("settings.production")
 
 with app.app_context():
@@ -34,7 +33,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # The import must be done after db initialization due to circular import issue
-from models import Answer, Survey
+from models import Answer, Survey # noqa
 
 
 @app.route("/", methods=["GET"])
