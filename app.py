@@ -1,7 +1,13 @@
 import os
 
-from flask import (Flask, redirect, render_template, request,
-                   send_from_directory, url_for)
+from flask import (
+    Flask,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+)
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
@@ -33,7 +39,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # The import must be done after db initialization due to circular import issue
-from models import Answer, Survey # noqa
+from models import Answer, Survey  # noqa
 
 
 @app.route("/", methods=["GET"])

@@ -1,0 +1,7 @@
+-r requirements.txt
+black
+ruff
+pytest
+coverage
+pytest-cov
+pre-commit
