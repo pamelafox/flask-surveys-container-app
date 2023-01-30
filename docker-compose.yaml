@@ -2,6 +2,8 @@ services:
   db:
     image: postgres
     restart: always
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: ${DBPASS:?database password not set}
       POSTGRES_USER: ${DBUSER:?database user not set}
@@ -16,6 +18,8 @@ services:
   app:
     build:
       context: .
+    environment:
+      DBHOST: db
     ports:
       - 5000:5000
     depends_on:

@@ -6,19 +6,17 @@
 		"dockerfile": "Dockerfile",
 		"context": ".."
 	},
-	"forwardPorts": [5000, 5432],
-	
+	"runArgs": ["--env-file",".env"],
+	"forwardPorts": [5432, 5000],
+
     // https://github.com/devcontainers/features
 	"features": {
-        "ghcr.io/devcontainers/features/python:1": {
-            "version": "os-provided"
-        },
         "ghcr.io/devcontainers/features/docker-in-docker:2": {}
     },
 
 	// Configure tool-specific properties.
 	"customizations": {
-		
+
 		// Configure properties specific to VS Code.
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
@@ -31,15 +29,16 @@
 				"mtxr.sqltools-driver-pg"
 			],
 			// Set *default* container specific settings.json values on container create.
-			"settings": { 
+			"settings": {
 				"python.defaultInterpreterPath": "/usr/local/bin/python",
 				"python.linting.enabled": true,
 				"python.linting.pylintEnabled": true,
 				"python.linting.pylintArgs": [
 					"--disable=C0114,C0115,C0116"
 				],
+				"python.testing.unittestEnabled": false,
+				"python.testing.pytestEnabled": true,
 				"python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
-				"python.formatting.blackPath": "/usr/local/py-utils/bin/black",
 				"python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
 				"python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
 				"python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
@@ -47,20 +46,17 @@
 				"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
 				"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
 				"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
-				"python.testing.unittestEnabled": false,
-				"python.testing.pytestEnabled": true,
-				"workbench.startupEditor": "newUntitledFile",
-
+				"workbench.startupEditor": "readme",
 				"sqltools.connections": [
 					{
+						"previewLimit": 50,
+						"server": "${env:DBHOST}",
+						"port": 5432,
 						"name": "Container database",
 						"driver": "PostgreSQL",
-						"previewLimit": 50,
-						"server": "localhost",
-						"port": 5432,
-						"database": "app",
-						"username": "app_user",
-						"password": "app_password"
+						"database": "${env:DBNAME}",
+						"username": "${env:DBUSER}",
+						"password": "${env:DBUSER}"
 					}
 				]
 			}
@@ -68,7 +64,7 @@
 	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip install -r requirements.txt",
+	"postCreateCommand": "pip install -r requirements-dev.txt && pre-commit install",
 
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode"

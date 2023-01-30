@@ -3,7 +3,7 @@ Flask-Migrate
 Flask-SQLAlchemy
 Flask-WTF
 requests
-psycopg2-binary
+psycopg2
 python-dotenv
 SQLAlchemy
 gunicorn

@@ -1,4 +1,27 @@
 [tool.ruff]
-select = ["E", "F", "I", "UP"]
+select = ["E", "F", "I"]
 target-version = "py311"
 line-length = 120
+
+[tool.black]
+target-version =  ["py310"]
+line-length = 120
+extend-exclude = '''
+(
+  ^/migrations\/
+)
+'''
+force-exclude = '''
+# Needed for pre-commit
+(
+  ^/migrations\/
+)
+'''
+
+[tool.pytest.ini_options]
+addopts = "-ra --cov"
+testpaths = [
+    "tests"
+]
+pythonpath = ['.']
+env_files = ['.env']

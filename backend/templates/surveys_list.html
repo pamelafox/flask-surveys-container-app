@@ -16,7 +16,7 @@
                       <tr>
                           <td>{{ survey.topic }}</td>
                           <td>{{ survey.answer_count }}</td>
-                          <td class="text-end"><a href="{{ url_for('survey_page', survey_id=survey.id) }}" class="btn btn-sm btn-primary">Survey Page</a></td>
+                          <td class="text-end"><a href="{{ url_for('surveys.survey_page', survey_id=survey.id) }}" class="btn btn-sm btn-primary">Survey Page</a></td>
                       </tr>
                   {% endfor %}
               </tbody>
@@ -26,6 +26,6 @@
       {% endif %}
 
       <div class="d-flex justify-content-end">
-              <a href="{{ url_for('surveys_create_page') }}" class="btn btn-success px-4 gap-3">Create new survey</a>
+              <a href="{{ url_for('surveys.surveys_create_page') }}" class="btn btn-success px-4 gap-3">Create new survey</a>
       </div>
 {% endblock %}

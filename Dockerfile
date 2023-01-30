@@ -11,6 +11,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /code
 
 # Install pip requirements
+RUN apt-get update && apt-get -y install libpq-dev gcc
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 

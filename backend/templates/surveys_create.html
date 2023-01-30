@@ -3,7 +3,8 @@
 {% block content %}
     <h1>Create New Survey</h1>
     <p class="text-warning">{{ message }}</p>
-    <form method="POST" action="{{ url_for('surveys_create_handler') }}">
+    <form method="POST" action="{{ url_for('surveys.surveys_create_handler') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="mb-3">
             <label for="survey_topic" class="form-label">Topic</label>
             <input type="text" class="form-control" id="survey_topic" name="survey_topic">
@@ -12,7 +13,7 @@
           <label for="survey_question" class="form-label">Question</label>
           <input type="text" class="form-control" id="survey_question" name="survey_question">
         </div>
-        
+
         <div class="mb-3">
             <label for="survey_options" class="form-label">Options (new line separated)</label>
             <textarea class="form-control" id="survey_options" name="survey_options"></textarea>
@@ -21,4 +22,3 @@
         <button type="cancel" class="btn btn-warning">Cancel</button>
     </form>
 {% endblock %}
-    

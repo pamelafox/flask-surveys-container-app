@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Survey: {{ survey.topic }}{% endblock %}
 {% block content %}
-  <h2>Survey: {{ survey.topic }}</h2> 
+  <h2>Survey: {{ survey.topic }}</h2>
 
   {% if not already_voted %}
   <section class="row">
 
-  <form method="POST" action="{{ url_for('answers_create_handler', survey_id=survey.id) }}">
+  <form method="POST" action="{{ url_for('surveys.answers_create_handler', survey_id=survey.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <fieldset class="form-group">
       <legend>{{survey.question}}</legend>
         <!-- Loop through the survey options and create radio buttons -->

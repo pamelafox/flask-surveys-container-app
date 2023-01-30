@@ -2,7 +2,7 @@ import logging
 
 from sqlalchemy import Column, ForeignKey, Integer, String
 
-from app import db
+from backend import db
 
 
 class Survey(db.Model):
@@ -24,9 +24,7 @@ class Survey(db.Model):
     def option_stats(self):
         """Returns a dictionary of option counts"""
         answer_count = self.answer_count
-        option_count = {
-            option: {"count": 0, "percent": 0} for option in self.options_list
-        }
+        option_count = {option: {"count": 0, "percent": 0} for option in self.options_list}
         for answer in Answer.query.filter_by(survey=self.id):
             if answer.selected_option in option_count:
                 option_count[answer.selected_option]["count"] += 1
@@ -35,9 +33,7 @@ class Survey(db.Model):
                     2,
                 )
             else:
-                logging.warning(
-                    "No matching option found for [%s]", answer.selected_option
-                )
+                logging.warning("No matching option found for [%s]", answer.selected_option)
         return option_count
 
 

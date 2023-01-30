@@ -1,9 +1,10 @@
 This project is a demonstration of a Flask app that uses a database and is designed to be used with Docker containers,
 both for local development and deployment.
 
+
 ### Local development with Docker
 
-Since this app depends on a database, there's a `docker-compose.yaml` that creates two containers
+Since this app depends on a database, there's a `docker-compose.yaml` file that creates two containers
 (one for the app, one for the DB) as well as a volume to store the database data.
 
 1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/). (If you opened this inside Github Codespaces or a Dev Container in VS Code, installation is not needed.)
@@ -17,6 +18,37 @@ Since this app depends on a database, there's a `docker-compose.yaml` that creat
     ```
 
 4. Try creating a new survey and answering your newly created survey.
+
+Alternatively, if you are iterating frequently on the app code, you might want to run only the database in a container.
+
+1. Create a volume to store the database data:
+
+```shell
+docker volume create postgres-data
+```
+
+2. Export the environment variables:
+
+```shell
+source .env
+```
+
+3. Run a `postgres` container and expose on localhost:5432:
+
+```shell
+docker run --rm -d -v postgres-data:/var/lib/postgresql/data \
+    -e POSTGRES_USER=DBUSER -e POSTGRES_PASSWORD=DBPASS \
+    --publish 5432:5432 postgres
+```
+
+4. Upgrade the database and run the server:
+
+```shell
+flask db migrate && flask run
+```
+
+4. Try creating a new survey and answering your newly created survey.
+
 
 ### Deployment
 
@@ -45,4 +77,4 @@ Steps for deployment:
 
 ## Getting help
 
-If you're working with this project and running into issues, please post in [Discussions](/discussions). 
+If you're working with this project and running into issues, please post in [Discussions](/discussions).
