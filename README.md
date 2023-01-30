@@ -23,29 +23,29 @@ Alternatively, if you are iterating frequently on the app code, you might want t
 
 1. Create a volume to store the database data:
 
-```shell
-docker volume create postgres-data
-```
+    ```shell
+    docker volume create postgres-data
+    ```
 
 2. Export the environment variables:
 
-```shell
-source .env
-```
+    ```shell
+    source .env
+    ```
 
 3. Run a `postgres` container and expose on localhost:5432:
 
-```shell
-docker run --rm -d -v postgres-data:/var/lib/postgresql/data \
-    -e POSTGRES_USER=DBUSER -e POSTGRES_PASSWORD=DBPASS \
-    --publish 5432:5432 postgres
-```
+    ```shell
+    docker run --rm -d -v postgres-data:/var/lib/postgresql/data \
+        -e POSTGRES_USER=DBUSER -e POSTGRES_PASSWORD=DBPASS \
+        --publish 5432:5432 postgres
+    ```
 
 4. Upgrade the database and run the server:
 
-```shell
-flask db migrate && flask run
-```
+    ```shell
+    flask db migrate && flask run
+    ```
 
 4. Try creating a new survey and answering your newly created survey.
 

@@ -36,6 +36,7 @@ def create_app(config=None):
 
     from backend.surveys import bp as surveys_bp
 
+    print("Registering blueprint")
     app.register_blueprint(surveys_bp)
 
     return app

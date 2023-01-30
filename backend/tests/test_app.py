@@ -2,7 +2,6 @@
 import pytest
 
 import backend.surveys.models as models
-from app import app
 
 
 @pytest.fixture()
@@ -17,14 +16,14 @@ def fake_survey(session):
     return survey
 
 
-def test_index_redirect():
+def test_index_redirect(app):
     with app.test_client() as client:
         resp = client.get("/")
         assert resp.status_code == 302
         assert resp.location == "/surveys"
 
 
-def test_surveys_list_page(fake_survey):
+def test_surveys_list_page(app, fake_survey):
     with app.test_client() as client:
         resp = client.get("/surveys")
         assert resp.status_code == 200

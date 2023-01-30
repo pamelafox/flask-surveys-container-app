@@ -1,5 +1,5 @@
 [tool.ruff]
-select = ["E", "F", "I", "UP"]
+select = ["E", "F", "I", "U"]
 target-version = "py311"
 line-length = 120
 
