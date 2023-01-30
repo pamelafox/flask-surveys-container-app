@@ -16,6 +16,9 @@
       },
       "postgresPassword": {
         "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} postgresPassword)"
+      },
+      "flaskSecret": {
+        "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} flaskSecret)"
       }
     }
   }

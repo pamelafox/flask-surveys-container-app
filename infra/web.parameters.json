@@ -31,6 +31,9 @@
       },
       "keyVaultName": {
         "value": "${AZURE_KEY_VAULT_NAME}"
+      },
+      "flaskSecret": {
+        "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} flaskSecret)"
       }
     }
   }

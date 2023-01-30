@@ -13,6 +13,10 @@ param location string
 @description('PostGreSQL Server administrator password')
 param postgresPassword string
 
+@secure()
+@description('Flask secret')
+param flaskSecret string
+
 @description('The image name for the web service')
 param webImageName string = ''
 
@@ -32,16 +36,37 @@ var prefix = '${name}-${resourceToken}'
 
 var postgresUser = 'flaskadmin'
 var postgresDatabaseName = 'flask'
+var keyVaultName = '${take(prefix, 17)}-vault'
 
 // Store secrets in a keyvault
 module keyVault './core/security/keyvault.bicep' = {
   name: 'keyvault'
   scope: resourceGroup
   params: {
-    name: '${take(prefix, 17)}-vault'
+    name: keyVaultName
     location: location
     tags: tags
     principalId: principalId
+  }
+}
+
+module keyVaultSecret './core/security/keyvault-secret.bicep' = {
+  name: 'keyvault-secret1'
+  scope: resourceGroup
+  params: {
+    keyVaultName: keyVaultName
+    name: 'postgresPassword'
+    secretValue: postgresPassword
+  }
+}
+
+module keyVaultSecret2 './core/security/keyvault-secret.bicep' = {
+  name: 'keyvault-secret2'
+  scope: resourceGroup
+  params: {
+    keyVaultName: keyVaultName
+    name: 'flaskSecret'
+    secretValue: flaskSecret
   }
 }
 
@@ -63,7 +88,8 @@ module postgresServer 'core/database/postgresql/flexibleserver.bicep' = {
     administratorLogin: postgresUser
     administratorLoginPassword: postgresPassword
     databaseNames: [postgresDatabaseName]
-    enableFirewall: true
+    allowAzureIPsFirewall: true
+    allowedSingleIPs: ['24.130.186.222']
   }
 }
 
@@ -105,8 +131,11 @@ module web 'web.bicep' = {
     postgresUser: postgresUser
     postgresPassword: postgresPassword
     postgresDatabaseName: postgresDatabaseName
+    flaskSecret: flaskSecret
   }
 }
+
+
 
 
 output AZURE_LOCATION string = location
@@ -117,6 +146,7 @@ output POSTGRES_DATABASE_NAME string = postgresDatabaseName
 output POSTGRES_DOMAIN_NAME string = postgresServer.outputs.POSTGRES_DOMAIN_NAME
 output POSTGRES_USER string = postgresUser
 output POSTGRES_PASSWORD string = postgresPassword
+output FLASK_SECRET string = flaskSecret
 output SERVICE_WEB_IDENTITY_PRINCIPAL_ID string = web.outputs.SERVICE_WEB_IDENTITY_PRINCIPAL_ID
 output SERVICE_WEB_NAME string = web.outputs.SERVICE_WEB_NAME
 output SERVICE_WEB_URI string = web.outputs.SERVICE_WEB_URI

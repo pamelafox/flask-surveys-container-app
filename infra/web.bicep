@@ -13,6 +13,8 @@ param postgresDatabaseName string
 param postgresUser string
 @secure()
 param postgresPassword string
+@secure()
+param flaskSecret string
 
 module app 'core/host/container-app.bicep' = {
   name: '${serviceName}-container-app-module'
@@ -26,6 +28,10 @@ module app 'core/host/container-app.bicep' = {
       {
         name: 'postgres-password'
         value: postgresPassword
+      }
+      {
+        name: 'flask-secret'
+        value: flaskSecret
       }
     ]
     env: [
@@ -44,6 +50,10 @@ module app 'core/host/container-app.bicep' = {
       {
         name: 'DBNAME'
         value: postgresDatabaseName
+      }
+      {
+        name: 'FLASK_SECRET'
+        secretRef: 'flask-secret'
       }
       {
         name: 'RUNNING_IN_PRODUCTION'
