@@ -29,6 +29,6 @@ jobs:
         - name: Lint with ruff
           run: ruff .
         - name: Check formatting with black
-          run: black api/ --check --verbose
+          run: black . --check --verbose
         - name: Run Pytest tests
           run: pytest
