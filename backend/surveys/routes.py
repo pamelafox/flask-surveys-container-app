@@ -1,6 +1,4 @@
-import os
-
-from flask import redirect, render_template, request, send_from_directory, url_for
+from flask import redirect, render_template, request, url_for
 
 from backend import db
 from backend.surveys import bp
@@ -65,12 +63,3 @@ def answers_create_handler(survey_id):
     # Set cookie on the response
     resp.set_cookie("survey_id", str(survey_id))
     return resp
-
-
-@bp.route("/favicon.ico")
-def favicon():
-    return send_from_directory(
-        os.path.join(bp.root_path, "static"),
-        "favicon.ico",
-        mimetype="image/vnd.microsoft.icon",
-    )

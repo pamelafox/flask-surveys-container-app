@@ -1,5 +1,3 @@
-import os
-
 import pytest
 from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -10,13 +8,7 @@ from backend import db as _db
 @pytest.fixture(scope="session")
 def app(request):
     """Session-wide test `Flask` application."""
-    config_override = {
-        "SQLALCHEMY_DATABASE_URI": os.environ.get(
-            "TEST_DATABASE_URI",
-            "postgresql://app_user:app_password@localhost:5432/postgres",
-        ),
-    }
-    _app = create_app(config_override)
+    _app = create_app({"WTF_CSRF_ENABLED": False})
 
     # Establish an application context before running the tests.
     ctx = _app.app_context()

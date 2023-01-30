@@ -14,7 +14,7 @@ class Survey(db.Model):
 
     @property
     def options_list(self):
-        return [option.strip() for option in self.options.split("\n")]
+        return [option.strip() for option in self.options.strip().split("\n")]
 
     @property
     def answer_count(self):
