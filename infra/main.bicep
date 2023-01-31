@@ -36,39 +36,20 @@ var prefix = '${name}-${resourceToken}'
 
 var postgresUser = 'flaskadmin'
 var postgresDatabaseName = 'flask'
-var keyVaultName = '${take(prefix, 17)}-vault'
 
 // Store secrets in a keyvault
 module keyVault './core/security/keyvault.bicep' = {
   name: 'keyvault'
   scope: resourceGroup
   params: {
-    name: keyVaultName
+    name: '${take(prefix, 17)}-vault'
     location: location
     tags: tags
     principalId: principalId
   }
 }
 
-module keyVaultSecret './core/security/keyvault-secret.bicep' = {
-  name: 'keyvault-secret1'
-  scope: resourceGroup
-  params: {
-    keyVaultName: keyVaultName
-    name: 'postgresPassword'
-    secretValue: postgresPassword
-  }
-}
 
-module keyVaultSecret2 './core/security/keyvault-secret.bicep' = {
-  name: 'keyvault-secret2'
-  scope: resourceGroup
-  params: {
-    keyVaultName: keyVaultName
-    name: 'flaskSecret'
-    secretValue: flaskSecret
-  }
-}
 
 module postgresServer 'core/database/postgresql/flexibleserver.bicep' = {
   name: 'postgresql'
@@ -129,13 +110,43 @@ module web 'web.bicep' = {
     keyVaultName: keyVault.outputs.name
     postgresDomainName: postgresServer.outputs.POSTGRES_DOMAIN_NAME
     postgresUser: postgresUser
-    postgresPassword: postgresPassword
     postgresDatabaseName: postgresDatabaseName
-    flaskSecret: flaskSecret
+  }
+}
+
+// Give the app access to KeyVault
+module webKeyVaultAccess './core/security/keyvault-access.bicep' = {
+  name: 'web-keyvault-access'
+  scope: resourceGroup
+  params: {
+    keyVaultName: keyVault.outputs.name
+    principalId: web.outputs.SERVICE_WEB_IDENTITY_PRINCIPAL_ID
   }
 }
 
 
+
+var secrets = [
+  {
+    name: 'DBPASS'
+    value: postgresPassword
+  }
+  {
+    name: 'FLASK_SECRET'
+    value: flaskSecret
+  }
+]
+
+@batchSize(1)
+module keyVaultSecrets './core/security/keyvault-secret.bicep' = [for secret in secrets: {
+  name: 'keyvault-secret-${secret.name}'
+  scope: resourceGroup
+  params: {
+    keyVaultName: keyVault.outputs.name
+    name: secret.name
+    secretValue: secret.value
+  }
+}]
 
 
 output AZURE_LOCATION string = location
@@ -145,8 +156,6 @@ output AZURE_CONTAINER_REGISTRY_NAME string = containerApps.outputs.registryName
 output POSTGRES_DATABASE_NAME string = postgresDatabaseName
 output POSTGRES_DOMAIN_NAME string = postgresServer.outputs.POSTGRES_DOMAIN_NAME
 output POSTGRES_USER string = postgresUser
-output POSTGRES_PASSWORD string = postgresPassword
-output FLASK_SECRET string = flaskSecret
 output SERVICE_WEB_IDENTITY_PRINCIPAL_ID string = web.outputs.SERVICE_WEB_IDENTITY_PRINCIPAL_ID
 output SERVICE_WEB_NAME string = web.outputs.SERVICE_WEB_NAME
 output SERVICE_WEB_URI string = web.outputs.SERVICE_WEB_URI
