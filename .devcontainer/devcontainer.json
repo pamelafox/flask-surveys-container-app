@@ -11,7 +11,10 @@
 
     // https://github.com/devcontainers/features
 	"features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.11"
+        }
     },
 
 	// Configure tool-specific properties.
@@ -21,8 +24,6 @@
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"ms-python.python",
-				"ms-python.vscode-pylance",
 				"ms-azuretools.vscode-docker",
 				"ms-azuretools.vscode-bicep",
 				"mtxr.sqltools",
@@ -30,7 +31,6 @@
 			],
 			// Set *default* container specific settings.json values on container create.
 			"settings": {
-				"python.defaultInterpreterPath": "/usr/local/bin/python",
 				"python.linting.enabled": true,
 				"python.linting.pylintEnabled": true,
 				"python.linting.pylintArgs": [
@@ -38,15 +38,6 @@
 				],
 				"python.testing.unittestEnabled": false,
 				"python.testing.pytestEnabled": true,
-				"python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
-				"python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
-				"python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
-				"python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
-				"python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
-				"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
-				"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
-				"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
-				"workbench.startupEditor": "readme",
 				"sqltools.connections": [
 					{
 						"previewLimit": 50,
@@ -58,7 +49,8 @@
 						"username": "${env:DBUSER}",
 						"password": "${env:DBUSER}"
 					}
-				]
+				],
+				"workbench.startupEditor": "readme"
 			}
 		}
 	},
