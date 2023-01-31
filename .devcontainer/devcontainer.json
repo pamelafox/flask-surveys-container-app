@@ -6,7 +6,6 @@
 		"dockerfile": "Dockerfile",
 		"context": ".."
 	},
-	"runArgs": ["--env-file",".env"],
 	"forwardPorts": [5432, 5000],
 
     // https://github.com/devcontainers/features
@@ -41,13 +40,13 @@
 				"sqltools.connections": [
 					{
 						"previewLimit": 50,
-						"server": "${env:DBHOST}",
+						"server": "localhost",
 						"port": 5432,
 						"name": "Container database",
 						"driver": "PostgreSQL",
-						"database": "${env:DBNAME}",
-						"username": "${env:DBUSER}",
-						"password": "${env:DBUSER}"
+						"database": "postgres",
+						"username": "app_user",
+						"password": "app_password"
 					}
 				],
 				"workbench.startupEditor": "readme"
