@@ -15,7 +15,8 @@ param allowedSingleIPs array = []
 // PostgreSQL version
 param version string
 
-resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' = {
+// Latest official version 2022-12-01 does not have Bicep types available
+resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01-preview' = {
   location: location
   tags: tags
   name: name
@@ -35,7 +36,7 @@ resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2022-12-01' =
   }]
 
   resource firewall_all 'firewallRules' = if (allowAllIPsFirewall) {
-    name: 'allow-all-IPS'
+    name: 'allow-all-IPs'
     properties: {
         startIpAddress: '0.0.0.0'
         endIpAddress: '255.255.255.255'
