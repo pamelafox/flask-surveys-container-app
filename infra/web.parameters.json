@@ -3,22 +3,22 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "location": {
-        "value": "${AZURE_LOCATION}"
+        "value": "eastus"
       },
       "name": {
-        "value": "${SERVICE_WEB_NAME}"
+        "value": "flasksurveys-xvmcme-containerapp"
       },
       "imageName": {
-        "value": "${SERVICE_WEB_IMAGE_NAME}"
+        "value": "flasksurveysxvmcmelitbap4registry.azurecr.io/flask-surveys-container-app/web-flasksurveys:azdev-deploy-1675283586"
       },
       "postgresDomainName": {
-        "value": "${POSTGRES_DOMAIN_NAME}"
+        "value": "flasksurveys-xvmcmelitbap4-postgresql.postgres.database.azure.com"
       },
       "postgresUser": {
-        "value": "${POSTGRES_USER}"
+        "value": "flaskadmin"
       },
       "postgresDatabaseName": {
-        "value": "${POSTGRES_DATABASE_NAME}"
+        "value": "flask"
       },
       "postgresPassword": {
         "reference": {
@@ -29,13 +29,13 @@
         }
       },
       "containerAppsEnvironmentName": {
-        "value": "${AZURE_CONTAINER_ENVIRONMENT_NAME}"
+        "value": "flasksurveys-xvmcmelitbap4-containerapps-env"
       },
       "containerRegistryName": {
-        "value": "${AZURE_CONTAINER_REGISTRY_NAME}"
+        "value": "flasksurveysxvmcmelitbap4registry"
       },
       "keyVaultName": {
-        "value": "${AZURE_KEY_VAULT_NAME}"
+        "value": "flasksurveys-xvmc-vault"
       }
     }
   }
