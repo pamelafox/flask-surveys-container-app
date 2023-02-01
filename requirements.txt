@@ -2,7 +2,6 @@ Flask
 Flask-Migrate
 Flask-SQLAlchemy
 Flask-WTF
-requests
 psycopg2
 python-dotenv
 SQLAlchemy
