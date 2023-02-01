@@ -11,10 +11,6 @@ param serviceName string = 'web'
 param postgresDomainName string
 param postgresDatabaseName string
 param postgresUser string
-@secure()
-param postgresPassword string
-@secure()
-param flaskSecret string
 
 module app 'core/host/container-app.bicep' = {
   name: '${serviceName}-container-app-module'
@@ -24,16 +20,6 @@ module app 'core/host/container-app.bicep' = {
     tags: union(tags, { 'azd-service-name': serviceName })
     containerAppsEnvironmentName: containerAppsEnvironmentName
     containerRegistryName: containerRegistryName
-    secrets: [
-      {
-        name: 'postgres-password'
-        value: postgresPassword
-      }
-      {
-        name: 'flask-secret'
-        value: flaskSecret
-      }
-    ]
     env: [
       {
         name: 'DBHOST'
@@ -44,16 +30,12 @@ module app 'core/host/container-app.bicep' = {
         value: postgresUser
       }
       {
-        name: 'DBPASS'
-        secretRef: 'postgres-password'
-      }
-      {
         name: 'DBNAME'
         value: postgresDatabaseName
       }
       {
-        name: 'FLASK_SECRET'
-        secretRef: 'flask-secret'
+        name: 'KEY_VAULT_NAME'
+        value: keyVault.name
       }
       {
         name: 'RUNNING_IN_PRODUCTION'

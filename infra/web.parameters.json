@@ -17,9 +17,6 @@
       "postgresUser": {
         "value": "${POSTGRES_USER}"
       },
-      "postgresPassword": {
-        "value": "${POSTGRES_PASSWORD}"
-      },
       "postgresDatabaseName": {
         "value": "${POSTGRES_DATABASE_NAME}"
       },
@@ -31,9 +28,6 @@
       },
       "keyVaultName": {
         "value": "${AZURE_KEY_VAULT_NAME}"
-      },
-      "flaskSecret": {
-        "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} flaskSecret)"
       }
     }
   }

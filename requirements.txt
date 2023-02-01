@@ -7,3 +7,5 @@ psycopg2
 python-dotenv
 SQLAlchemy
 gunicorn
+azure-keyvault-secrets
+azure.identity
