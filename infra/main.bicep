@@ -132,7 +132,7 @@ var secrets = [
     value: postgresPassword
   }
   {
-    name: 'FLASK_SECRET'
+    name: 'FLASKSECRET'
     value: flaskSecret
   }
 ]
@@ -147,7 +147,6 @@ module keyVaultSecrets './core/security/keyvault-secret.bicep' = [for secret in 
     secretValue: secret.value
   }
 }]
-
 
 output AZURE_LOCATION string = location
 output AZURE_CONTAINER_ENVIRONMENT_NAME string = containerApps.outputs.environmentName

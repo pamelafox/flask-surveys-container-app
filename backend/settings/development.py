@@ -9,7 +9,7 @@ TIME_ZONE = "UTC"
 STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)
 STATIC_URL = "static/"
 
-SECRET_KEY = os.environ.get("FLASK_SECRET", "flask-insecure-7ppocbnx@w71dcuinn*t^_mzal(t@o01v3fee27g%rg18fc5d@")
+SECRET_KEY = os.environ.get("FLASKSECRET", "flask-insecure-7ppocbnx@w71dcuinn*t^_mzal(t@o01v3fee27g%rg18fc5d@")
 
 DBUSER = os.environ["DBUSER"]
 DBPASS = os.environ["DBPASS"]
