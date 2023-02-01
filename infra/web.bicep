@@ -10,6 +10,9 @@ param serviceName string = 'web'
 param postgresDomainName string
 param postgresDatabaseName string
 param postgresUser string
+@secure()
+param postgresPassword string = ''
+
 
 module app 'core/host/container-app.bicep' = {
   name: '${serviceName}-container-app-module'
@@ -19,12 +22,10 @@ module app 'core/host/container-app.bicep' = {
     tags: union(tags, { 'azd-service-name': serviceName })
     containerAppsEnvironmentName: containerAppsEnvironmentName
     containerRegistryName: containerRegistryName
-    secrets: {
-      DBPASS: {
-        name: 'DBPASS'
-        value: keyVault.getSecret('DBPASS')
-      }
-    }
+    secrets: [{
+      name: 'postgres-password'
+      value: postgresPassword
+    }]
     env: [
       {
         name: 'DBHOST'
@@ -41,6 +42,10 @@ module app 'core/host/container-app.bicep' = {
       {
         name: 'KEY_VAULT_NAME'
         value: keyVault.name
+      }
+      {
+        name: 'DBPASS'
+        secretRef: 'postgres-password'
       }
       {
         name: 'RUNNING_IN_PRODUCTION'

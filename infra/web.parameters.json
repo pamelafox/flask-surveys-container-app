@@ -20,6 +20,14 @@
       "postgresDatabaseName": {
         "value": "${POSTGRES_DATABASE_NAME}"
       },
+      "postgresPassword": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/32ea8a26-5b40-4838-b6cb-be5c89a57c16/resourceGroups/flasksurveys-rg/providers/Microsoft.KeyVault/vaults/flasksurveys-xvmc-vault"
+          },
+          "secretName": "DBPASS"
+        }
+      },
       "containerAppsEnvironmentName": {
         "value": "${AZURE_CONTAINER_ENVIRONMENT_NAME}"
       },

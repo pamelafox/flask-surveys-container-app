@@ -6,8 +6,7 @@ param containerAppsEnvironmentName string = ''
 param containerName string = 'main'
 param containerRegistryName string = ''
 param env array = []
-@secure()
-param secrets object = {}
+param secrets array = []
 param external bool = true
 param imageName string
 param keyVaultName string = ''
@@ -20,10 +19,6 @@ param containerCpuCoreCount string = '0.5'
 @description('Memory allocated to a single container instance, e.g. 1Gi')
 param containerMemory string = '1.0Gi'
 
-var secretsList = [for secret in items(secrets): {
-  name: secret.key
-  value: secret.value
-}]
 
 resource app 'Microsoft.App/containerApps@2022-03-01' = {
   name: name
@@ -39,7 +34,7 @@ resource app 'Microsoft.App/containerApps@2022-03-01' = {
         targetPort: targetPort
         transport: 'auto'
       }
-      secrets: union(secretsList, [{
+      secrets: union(secrets, [{
           name: 'registry-password'
           value: containerRegistry.listCredentials().passwords[0].value
         }])

@@ -149,6 +149,7 @@ module keyVaultSecrets './core/security/keyvault-secret.bicep' = [for secret in 
 }]
 
 output AZURE_LOCATION string = location
+output AZURE_RESOURCE_GROUP_NAME string = '${name}-rg'
 output AZURE_CONTAINER_ENVIRONMENT_NAME string = containerApps.outputs.environmentName
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerApps.outputs.registryLoginServer
 output AZURE_CONTAINER_REGISTRY_NAME string = containerApps.outputs.registryName
