@@ -6,7 +6,11 @@
 		"dockerfile": "Dockerfile",
 		"context": ".."
 	},
-	"forwardPorts": [5432, 5000],
+	"forwardPorts": [5000, 5432],
+	"portsAttributes": {
+		"5000": {"label": "Flask port", "onAutoForward": "notify"},
+		"5432": {"label": "PostgreSQL port", "onAutoForward": "silent"}
+	},
 
     // https://github.com/devcontainers/features
 	"features": {
