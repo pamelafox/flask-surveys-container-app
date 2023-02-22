@@ -4,6 +4,9 @@
 	"name": "flask-surveys-container-app",
 	"build": {
 		"dockerfile": "Dockerfile",
+		"args": {
+			"IMAGE": "python:3.11"
+		},
 		"context": ".."
 	},
 	"forwardPorts": [5000, 5432],
@@ -14,10 +17,7 @@
 
     // https://github.com/devcontainers/features
 	"features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-        "ghcr.io/devcontainers/features/python:1": {
-            "version": "3.11"
-        }
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
     },
 
 	// Configure tool-specific properties.
@@ -27,6 +27,8 @@
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
 				"ms-azuretools.vscode-docker",
 				"ms-azuretools.vscode-bicep",
 				"mtxr.sqltools",
