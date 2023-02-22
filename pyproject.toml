@@ -19,9 +19,12 @@ force-exclude = '''
 '''
 
 [tool.pytest.ini_options]
-addopts = "-ra --cov"
+addopts = "-ra --cov=backend"
 testpaths = [
-    "tests"
+    "backend/tests"
 ]
 pythonpath = ['.']
 env_files = ['.env']
+
+[tool.coverage.run]
+omit = ["backend/tests/*"]
