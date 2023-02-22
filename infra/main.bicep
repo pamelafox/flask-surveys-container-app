@@ -49,8 +49,6 @@ module keyVault './core/security/keyvault.bicep' = {
   }
 }
 
-
-
 module postgresServer 'core/database/postgresql/flexibleserver.bicep' = {
   name: 'postgresql'
   scope: resourceGroup
@@ -123,8 +121,6 @@ module webKeyVaultAccess './core/security/keyvault-access.bicep' = {
     principalId: web.outputs.SERVICE_WEB_IDENTITY_PRINCIPAL_ID
   }
 }
-
-
 
 var secrets = [
   {

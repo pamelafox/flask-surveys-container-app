@@ -15,10 +15,10 @@
         "value": "${SERVICE_WEB_IMAGE_NAME}"
       },
       "postgresPassword": {
-        "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} postgresPassword)"
+        "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} DBPASS)"
       },
       "flaskSecret": {
-        "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} flaskSecret)"
+        "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} FLASKSECRET)"
       }
     }
   }
