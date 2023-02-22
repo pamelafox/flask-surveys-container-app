@@ -39,7 +39,7 @@ If you're not using one of those options for opening the project, then you'll ne
 Since this app depends on a database, there's a `docker-compose.yaml` file that creates two containers
 (one for the app, one for the DB) as well as a volume to store the database data.
 
-1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/). (If you opened this inside Github Codespaces or a Dev Container in VS Code, installation is not needed.)
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/). If you opened this inside Github Codespaces or a Dev Container in VS Code, installation is not needed. ⚠️ If you're on an Apple M1/M2, you won't be able to run `docker` commands inside a Dev Container; either use Codespaces or do not open the Dev Container.
 
 2. Create an `.env` file by copying `.env.example`.
 
