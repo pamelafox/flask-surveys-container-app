@@ -15,12 +15,9 @@ def create_app(config=None):
 
     # If RUNNING_IN_PRODUCTION is defined, then we're running on Azure
     if "RUNNING_IN_PRODUCTION" not in os.environ:
-        # Local development, where we'll use environment variables.
         print("Loading settings.development and environment variables from .env")
         app.config.from_object("backend.settings.development")
-    else:
-        # Production, where we don't load environment variables from .env file but
-        # instead add them as environment variables in Azure.
+    else:  # pragma: no cover
         print("Loading settings.production")
         app.config.from_object("backend.settings.production")
     app.config.update(

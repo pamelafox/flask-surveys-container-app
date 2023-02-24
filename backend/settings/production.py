@@ -10,8 +10,7 @@ def get_secret(secret_name):
         credential = DefaultAzureCredential()
         client = SecretClient(vault_url=key_vault_uri, credential=credential)
         return client.get_secret(secret_name).value
-    else:
-        raise Exception("KEY_VAULT_NAME not set.")
+    raise RuntimeError("KEY_VAULT_NAME not set.")
 
 
 # SECURITY WARNING: keep the secret key used in production secret!

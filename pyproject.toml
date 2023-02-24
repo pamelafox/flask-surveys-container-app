@@ -27,4 +27,8 @@ pythonpath = ['.']
 env_files = ['.env']
 
 [tool.coverage.run]
-omit = ["backend/tests/*"]
+omit = ["backend/tests/*", "backend/settings/production.py"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 100
