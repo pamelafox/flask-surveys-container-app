@@ -1,5 +1,6 @@
 # Test the routes in routes.py using pytest
 import pytest
+from werkzeug.datastructures import ImmutableMultiDict
 
 import backend.surveys.models as models
 
@@ -85,3 +86,28 @@ def test_answers_create_handler_second(client, session, fake_survey):
     # Make sure it redirects to the associated survey
     assert resp.status_code == 302
     assert resp.location == f"/surveys/{fake_survey.id}"
+
+
+def test_surveys_multiple_allowed(client, session):
+    resp = client.post(
+        "/surveys",
+        data={
+            "survey_question": "What pets do you have?",
+            "survey_topic": "pets",
+            "survey_options": "zebra\horse\dog",
+            "survey_multiple_allowed": "on",
+        },
+    )
+    # Find the created survey in the database
+    survey = session.query(models.Survey).filter_by(topic="pets").first()
+    # Make sure it redirected to that survey
+    assert resp.status_code == 302
+    assert resp.location == f"/surveys/{survey.id}"
+    assert survey.multiple_allowed is True
+    # Now answer the survey
+    resp = client.post(
+        f"/surveys/{survey.id}/answers", data=ImmutableMultiDict([("option", "zebra"), ("option", "horse")])
+    )
+    # Count matching answers in the database
+    answer_count = session.query(models.Answer).filter_by(survey=survey.id).count()
+    assert answer_count == 2
