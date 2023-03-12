@@ -26,10 +26,12 @@ def surveys_create_handler():
     question = request.values.get("survey_question")
     topic = request.values.get("survey_topic")
     options = request.values.get("survey_options")
+    multiple_allowed = request.values.get("survey_multiple_allowed")
     survey = Survey()
     survey.topic = topic
     survey.question = question
     survey.options = options
+    survey.multiple_allowed = multiple_allowed == "on"
     db.session.add(survey)
     db.session.commit()
     return redirect(url_for("surveys.survey_page", survey_id=survey.id))
@@ -43,23 +45,24 @@ def survey_page(survey_id):
         "survey_details.html",
         survey=survey,
         answers=answers,
-        already_voted="survey_id" in request.cookies,
+        already_voted=Survey.cookie_for_id(survey_id) in request.cookies,
     )
 
 
 @bp.route("/surveys/<int:survey_id>/answers", methods=["POST"])
 def answers_create_handler(survey_id):
     # Check cookie to prevent multiple votes
-    if "survey_id" in request.cookies:
+    if Survey.cookie_for_id(survey_id) in request.cookies:
         return redirect(url_for("surveys.survey_page", survey_id=survey_id))
     # Store their answer in database
-    option = request.values.get("option")
-    answer = Answer()
-    answer.survey = survey_id
-    answer.selected_option = option.strip()
-    db.session.add(answer)
-    db.session.commit()
+    options = request.values.getlist("option")
+    for option in options:
+        answer = Answer()
+        answer.survey = survey_id
+        answer.selected_option = option.strip()
+        db.session.add(answer)
+        db.session.commit()
     resp = redirect(url_for("surveys.survey_page", survey_id=survey_id))
     # Set cookie on the response
-    resp.set_cookie("survey_id", str(survey_id))
+    resp.set_cookie(Survey.cookie_for_id(survey_id), "answered")
     return resp

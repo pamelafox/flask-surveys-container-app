@@ -13,7 +13,7 @@
         <!-- Loop through the survey options and create radio buttons -->
         {% for option in survey.options_list %}
         <div class="form-check mb-3">
-          <input class="form-check-input" type="radio" name="option" id="option{{ loop.index0 }}" value="{{ option }}">
+          <input class="form-check-input" type="{{ survey.input_type }}" name="option" id="option{{ loop.index0 }}" value="{{ option }}">
           <label class="form-check-label" for="option{{ loop.index0 }}">
             {{ option }}
           </label>

@@ -18,6 +18,7 @@ services:
   app:
     build:
       context: .
+    entrypoint: ./entrypoint-dev.sh
     environment:
       DBHOST: db
     ports:

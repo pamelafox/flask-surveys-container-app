@@ -25,7 +25,7 @@ If you're not using one of those options for opening the project, then you'll ne
 2. Install requirements:
 
     ```shell
-    pip3 install --user -r requirements-dev.txt
+    python3 -m pip install --user -r requirements-dev.txt
     ```
 
 3. Install the pre-commit hooks:
