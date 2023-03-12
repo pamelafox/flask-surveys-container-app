@@ -16,4 +16,4 @@ DBPASS = os.environ["DBPASS"]
 DBHOST = os.environ["DBHOST"]
 DBNAME = os.environ["DBNAME"]
 DATABASE_URI = f"postgresql+psycopg2://{DBUSER}:{DBPASS}@{DBHOST}/{DBNAME}"
-TEST_DATABASE_URI = f"postgresql+psycopg2://{DBUSER}:{DBPASS}@localhost/{DBNAME}-test"
+TEST_DATABASE_URI = f"postgresql+psycopg2://{DBUSER}:{DBPASS}@localhost/{DBNAME}"

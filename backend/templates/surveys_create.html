@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}New Survey{% endblock %}
 {% block content %}
-    <h1>Create New Survey!</h1>
+    <h1>Create New Survey</h1>
     <p class="text-warning">{{ message }}</p>
     <form method="POST" action="{{ url_for('surveys.surveys_create_handler') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
