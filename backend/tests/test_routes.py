@@ -72,12 +72,12 @@ def test_answers_create_handler_first(client, session, fake_survey):
     assert resp.status_code == 302
     assert resp.location == f"/surveys/{fake_survey.id}"
     # Make sure it set a cookie
-    assert "survey_id" in resp.headers["Set-Cookie"]
+    assert models.Survey.cookie_for_id(fake_survey.id) in resp.headers["Set-Cookie"]
 
 
 def test_answers_create_handler_second(client, session, fake_survey):
     # Post the form data along with survey_id cookie
-    client.set_cookie("/", "survey_id", str(fake_survey.id))
+    client.set_cookie("/", models.Survey.cookie_for_id(fake_survey.id), "answered")
     resp = client.post(f"/surveys/{fake_survey.id}/answers", data={"option": "strawberry"})
     # Count matching answers in the database
     answer_count = session.query(models.Answer).filter_by(selected_option="strawberry").count()

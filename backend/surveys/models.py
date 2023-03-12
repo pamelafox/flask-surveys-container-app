@@ -41,6 +41,10 @@ class Survey(db.Model):
                 logging.warning("No matching option found for [%s]", answer.selected_option)
         return option_count
 
+    @staticmethod
+    def cookie_for_id(survey_id):
+        return f"survey_id:{survey_id}"
+
 
 class Answer(db.Model):
     __tablename__ = "answer"

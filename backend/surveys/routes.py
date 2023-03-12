@@ -45,14 +45,14 @@ def survey_page(survey_id):
         "survey_details.html",
         survey=survey,
         answers=answers,
-        already_voted="survey_id" in request.cookies,
+        already_voted=Survey.cookie_for_id(survey_id) in request.cookies,
     )
 
 
 @bp.route("/surveys/<int:survey_id>/answers", methods=["POST"])
 def answers_create_handler(survey_id):
     # Check cookie to prevent multiple votes
-    if "survey_id" in request.cookies:
+    if Survey.cookie_for_id(survey_id) in request.cookies:
         return redirect(url_for("surveys.survey_page", survey_id=survey_id))
     # Store their answer in database
     options = request.values.getlist("option")
@@ -64,5 +64,5 @@ def answers_create_handler(survey_id):
         db.session.commit()
     resp = redirect(url_for("surveys.survey_page", survey_id=survey_id))
     # Set cookie on the response
-    resp.set_cookie("survey_id", str(survey_id))
+    resp.set_cookie(Survey.cookie_for_id(survey_id), "answered")
     return resp
