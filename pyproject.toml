@@ -2,28 +2,31 @@
 select = ["E", "F", "I", "UP"]
 target-version = "py311"
 line-length = 120
+src = ["src"]
 
 [tool.black]
 target-version =  ["py311"]
 line-length = 120
 extend-exclude = '''
 (
-  ^/migrations\/
+  ^/src/migrations\/
 )
 '''
 force-exclude = '''
 # Needed for pre-commit
 (
-  ^/migrations\/
+  ^/src/migrations\/
 )
 '''
 
 [tool.pytest.ini_options]
 addopts = "-ra --cov=backend"
 testpaths = [
-    "backend/tests"
+  "src/backend/tests"
 ]
-pythonpath = ['.']
+pythonpath = [
+  "src"
+]
 env_files = ['.env']
 
 [tool.coverage.run]

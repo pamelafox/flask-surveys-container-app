@@ -4,7 +4,7 @@ name: flask-surveys-container-app
 
 services:
   web:
-    project: .
+    project: ./src
     module: web
     language: py
     host: containerapp

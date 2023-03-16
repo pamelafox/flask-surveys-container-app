@@ -24,6 +24,6 @@ RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /
 USER appuser
 
 # Expose the default Flask port
-EXPOSE 5000
+EXPOSE 50505
 
 ENTRYPOINT ["/code/entrypoint.sh"]

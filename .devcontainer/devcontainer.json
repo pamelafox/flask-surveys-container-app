@@ -9,9 +9,9 @@
 		},
 		"context": ".."
 	},
-	"forwardPorts": [5000, 5432],
+	"forwardPorts": [50505, 5432],
 	"portsAttributes": {
-		"5000": {"label": "Flask port", "onAutoForward": "notify"},
+		"50505": {"label": "Flask port", "onAutoForward": "notify"},
 		"5432": {"label": "PostgreSQL port", "onAutoForward": "silent"}
 	},
 
