@@ -1,5 +1,6 @@
 [tool.ruff]
 select = ["E", "F", "I", "UP"]
+src = ["src"]
 target-version = "py311"
 line-length = 120
 
