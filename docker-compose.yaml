@@ -25,6 +25,8 @@ services:
       DBHOST: db
     ports:
       - 50505:50505
+    volumes:
+      - ./src:/code
     depends_on:
       db:
         condition: service_healthy

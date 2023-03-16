@@ -1,2 +1,2 @@
 #!/bin/sh
-flask db upgrade && gunicorn -c gunicorn.conf.py app:app --reload
+flask db upgrade && gunicorn -c gunicorn.conf.py --reload app:app
