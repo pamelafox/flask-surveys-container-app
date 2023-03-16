@@ -17,11 +17,11 @@ services:
       retries: 5
   app:
     build:
-      context: .
+      context: ./src
     environment:
       DBHOST: db
     ports:
-      - 5000:5000
+      - 5050:5050
     volumes:
       - .:/code
     depends_on:

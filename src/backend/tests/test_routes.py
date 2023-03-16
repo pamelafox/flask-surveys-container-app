@@ -1,8 +1,7 @@
 # Test the routes in routes.py using pytest
+import backend.surveys.models as models
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
-
-import backend.surveys.models as models
 
 
 @pytest.fixture()
