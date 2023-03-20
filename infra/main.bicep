@@ -68,7 +68,6 @@ module postgresServer 'core/database/postgresql/flexibleserver.bicep' = {
     administratorLoginPassword: postgresPassword
     databaseNames: [postgresDatabaseName]
     allowAzureIPsFirewall: true
-    allowedSingleIPs: ['24.130.186.222']
   }
 }
 
