@@ -2,7 +2,7 @@ import os
 
 import identity
 import identity.web
-from flask import Flask, session
+from flask import Flask, redirect, session, url_for
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
@@ -39,6 +39,12 @@ def create_app(config=None):
     # See also https://flask.palletsprojects.com/en/2.2.x/deploying/proxy_fix/
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
+    @app.context_processor
+    def inject_user():
+        auth = app.config["AUTH"]
+        user = auth.get_user()
+        return dict(user=user)
+
     db.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
@@ -58,5 +64,9 @@ def create_app(config=None):
 
     app.register_blueprint(auth_bp, url_prefix="")
     app.register_blueprint(surveys_bp, url_prefix="")
+
+    @app.route("/")
+    def index():
+        return redirect(url_for("surveys.surveys_list_page"))
 
     return app
