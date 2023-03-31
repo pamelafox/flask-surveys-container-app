@@ -8,3 +8,5 @@ SQLAlchemy==2.0.7
 gunicorn==20.1.0
 azure-keyvault-secrets==4.7.0
 azure-identity==1.12.0
+identity>=0.2,<0.3
+Flask-Session2

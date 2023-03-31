@@ -1,13 +1,9 @@
 from flask import redirect, render_template, request, url_for
 
 from backend import db
+from backend.decorators import login_required
 from backend.surveys import bp
 from backend.surveys.models import Answer, Survey
-
-
-@bp.route("/", methods=["GET"])
-def index():
-    return redirect(url_for("surveys.surveys_list_page"))
 
 
 @bp.route("/surveys", methods=["GET"])
@@ -17,6 +13,7 @@ def surveys_list_page():
 
 
 @bp.route("/surveys/new", methods=["GET"])
+@login_required
 def surveys_create_page():
     return render_template("surveys_create.html")
 

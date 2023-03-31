@@ -1,7 +1,7 @@
 import identity
 from flask import current_app, redirect, render_template, request, url_for
 
-from backend.login import bp
+from backend.auth import bp
 
 
 @bp.route("/login")
@@ -13,17 +13,18 @@ def login():
         **auth.log_in(
             scopes=current_app.config["SCOPE"],  # Have user consent to scopes during log-in
             redirect_uri=url_for(".auth_response", _external=True),
+            state=request.args.get("next_url", url_for(".index")),
         ),
     )
 
 
-@bp.route(current_app.config["REDIRECT_PATH"])
+@bp.route("/getAToken")
 def auth_response():
     auth = current_app.config["AUTH"]
     result = auth.complete_log_in(request.args)
     if "error" in result:
         return render_template("auth/auth_error.html", result=result)
-    return redirect(url_for(".index"))
+    return redirect(request.args.get("state", url_for(".index")))
 
 
 @bp.route("/logout")

@@ -2,17 +2,18 @@ import os
 
 import identity
 import identity.web
-from flask import Flask
+from flask import Flask, session
 from flask_migrate import Migrate
-from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+from flask_session import Session
+
 db = SQLAlchemy()
 migrate = Migrate()
 csrf = CSRFProtect()
-session = Session()
+sess = Session()
 
 
 def create_app(config=None):
@@ -41,7 +42,7 @@ def create_app(config=None):
     db.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
-    session.init_app(app)
+    sess.init_app(app)
 
     app.config.update(
         AUTH=identity.web.Auth(
@@ -52,10 +53,10 @@ def create_app(config=None):
         )
     )
 
-    from backend.surveys import bp as login_bp
+    from backend.auth import bp as auth_bp
     from backend.surveys import bp as surveys_bp
 
-    app.register_blueprint(surveys_bp)
-    app.register_blueprint(login_bp)
+    app.register_blueprint(auth_bp, url_prefix="")
+    app.register_blueprint(surveys_bp, url_prefix="")
 
     return app
