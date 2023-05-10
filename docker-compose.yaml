@@ -24,7 +24,7 @@ services:
     environment:
       DBHOST: db
     ports:
-      - 50505:50505
+      - "127.0.0.1:50505:50505"
     volumes:
       - ./src:/code
     depends_on:

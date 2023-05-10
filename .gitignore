@@ -353,3 +353,5 @@ MigrationBackup/
 .venv
 .env
 .azure
+flask_session/
+src/flask_session/

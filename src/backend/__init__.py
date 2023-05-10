@@ -1,13 +1,19 @@
 import os
 
-from flask import Flask
+import identity
+import identity.web
+from flask import Flask, redirect, session, url_for
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+from flask_session import Session
 
 db = SQLAlchemy()
 migrate = Migrate()
 csrf = CSRFProtect()
+sess = Session()
 
 
 def create_app(config=None):
@@ -27,12 +33,40 @@ def create_app(config=None):
     if config:
         app.config.update(config)
 
+    # This section is needed for url_for("foo", _external=True) to automatically
+    # generate http scheme when this sample is running on localhost,
+    # and to generate https scheme when it is deployed behind reversed proxy.
+    # See also https://flask.palletsprojects.com/en/2.2.x/deploying/proxy_fix/
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
+    @app.context_processor
+    def inject_user():
+        auth = app.config["AUTH"]
+        user = auth.get_user()
+        return dict(user=user)
+
     db.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
+    sess.init_app(app)
 
+    app.config.update(
+        AUTH=identity.web.Auth(
+            session=session,
+            authority=app.config.get("AUTHORITY"),
+            client_id=app.config["CLIENT_ID"],
+            client_credential=app.config["CLIENT_SECRET"],
+        )
+    )
+
+    from backend.auth import bp as auth_bp
     from backend.surveys import bp as surveys_bp
 
-    app.register_blueprint(surveys_bp)
+    app.register_blueprint(auth_bp, url_prefix="")
+    app.register_blueprint(surveys_bp, url_prefix="")
+
+    @app.route("/")
+    def index():
+        return redirect(url_for("surveys.surveys_list_page"))
 
     return app

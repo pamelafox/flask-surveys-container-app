@@ -26,3 +26,9 @@ DBPASS = get_secret("DBPASS")
 DBHOST = os.environ["DBHOST"]
 DBNAME = os.environ["DBNAME"]
 DATABASE_URI = f"postgresql+psycopg2://{DBUSER}:{DBPASS}@{DBHOST}/{DBNAME}?sslmode=require"
+
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+AUTHORITY = f"https://login.microsoftonline.com/{os.getenv('TENANT_ID', 'common')}"
+SCOPE = ["User.ReadBasic.All"]
+SESSION_TYPE = "filesystem"

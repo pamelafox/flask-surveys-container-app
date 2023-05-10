@@ -1,24 +1,21 @@
 from flask import redirect, render_template, request, url_for
 
 from backend import db
+from backend.decorators import login_required
 from backend.surveys import bp
 from backend.surveys.models import Answer, Survey
-
-
-@bp.route("/", methods=["GET"])
-def index():
-    return redirect(url_for("surveys.surveys_list_page"))
 
 
 @bp.route("/surveys", methods=["GET"])
 def surveys_list_page():
     surveys = Survey.query.all()
-    return render_template("surveys_list.html", surveys=surveys)
+    return render_template("surveys/surveys_list.html", surveys=surveys)
 
 
 @bp.route("/surveys/new", methods=["GET"])
+@login_required
 def surveys_create_page():
-    return render_template("surveys_create.html")
+    return render_template("surveys/surveys_create.html")
 
 
 @bp.route("/surveys", methods=["POST"])
@@ -42,7 +39,7 @@ def survey_page(survey_id):
     survey = Survey.query.where(Survey.id == survey_id).first()
     answers = Survey.query.where(Answer.survey == survey_id)
     return render_template(
-        "survey_details.html",
+        "surveys/survey_details.html",
         survey=survey,
         answers=answers,
         already_voted=Survey.cookie_for_id(survey_id) in request.cookies,

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+    <h1>Sign in with Microsoft Identity</h1>
+
+    {% if user_code %}
+    <ol>
+      <li>Type <b>{{ user_code }}</b> into
+        <a href='{{ auth_uri }}' target=_blank>{{ auth_uri }}</a>
+        to authenticate.
+      </li>
+      <li>And then <a href="{{ url_for('auth_response') }}">proceed</a>.</li>
+    </ol>
+    {% else %}
+    <p>Click here to <a href='{{ auth_uri }}'>sign in</a>.</p>
+    {% endif %}
+{% endblock %}
