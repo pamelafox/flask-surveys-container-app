@@ -2,10 +2,9 @@
 
 name: flask-surveys-container-app
 metadata:
-  template: flask-surveys-container-app@0.0.1-beta
+  template: flask-surveys-container-app@0.0.2-beta
 services:
   web:
     project: ./src
-    module: web
     language: py
     host: containerapp

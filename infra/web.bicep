@@ -2,22 +2,33 @@ param name string
 param location string = resourceGroup().location
 param tags object = {}
 
-//param applicationInsightsName string
+param identityName string
 param containerAppsEnvironmentName string
 param containerRegistryName string
-param imageName string = ''
-param keyVaultName string
 param serviceName string = 'web'
+param exists bool
 param postgresDomainName string
 param postgresDatabaseName string
 param postgresUser string
+@secure()
+param postgresPassword string
+@secure()
+param flaskSecret string
 
-module app 'core/host/container-app.bicep' = {
+resource webIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+  name: identityName
+  location: location
+}
+
+
+module app 'core/host/container-app-upsert.bicep' = {
   name: '${serviceName}-container-app-module'
   params: {
     name: name
     location: location
     tags: union(tags, { 'azd-service-name': serviceName })
+    identityName: webIdentity.name
+    exists: exists
     containerAppsEnvironmentName: containerAppsEnvironmentName
     containerRegistryName: containerRegistryName
     env: [
@@ -34,25 +45,33 @@ module app 'core/host/container-app.bicep' = {
         value: postgresDatabaseName
       }
       {
-        name: 'KEY_VAULT_NAME'
-        value: keyVault.name
-      }
-      {
         name: 'RUNNING_IN_PRODUCTION'
         value: 'true'
       }
+      {
+        name: 'FLASKSECRET'
+        secretRef: 'flasksecret'
+      }
+      {
+        name: 'DBPASS'
+        secretRef: 'dbpass'
+      }
     ]
-    imageName: !empty(imageName) ? imageName : 'nginx:latest'
-    keyVaultName: keyVault.name
     targetPort: 50505
+    secrets: [
+      {
+        name: 'dbpass'
+        value: postgresPassword
+      }
+      {
+        name: 'flasksecret'
+        value: flaskSecret
+      }
+    ]
   }
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
-  name: keyVaultName
-}
-
-output SERVICE_WEB_IDENTITY_PRINCIPAL_ID string = app.outputs.identityPrincipalId
+output SERVICE_WEB_IDENTITY_PRINCIPAL_ID string = webIdentity.properties.principalId
 output SERVICE_WEB_NAME string = app.outputs.name
 output SERVICE_WEB_URI string = app.outputs.uri
 output SERVICE_WEB_IMAGE_NAME string = app.outputs.imageName

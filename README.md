@@ -1,3 +1,6 @@
+[![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=brightgreen&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=pamelafox%2Fflask-surveys-container-app&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
+[![Open in Remote - Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Remote%20-%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com%2Fpamelafox%2Fflask-surveys-container-app)
+
 # Flask surveys container app
 
 This repository includes a Flask surveys app that uses [SQLAlchemy](https://www.sqlalchemy.org/)
@@ -59,27 +62,25 @@ This repo is set up for deployment on [Azure Container Apps](https://learn.micro
 
 Steps for deployment:
 
-1. Sign up for a [free Azure account](https://azure.microsoft.com/free/) and create a subscription.
-2. Install the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd). (If you opened this repository in a Dev Container, that part will be done for you.)
-3. Initialize a new `azd` environment:
+1. Sign up for a [free Azure account](https://azure.microsoft.com/free/) and create an Azure Subscription.
+2. Install the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd). (If you open this repository in Codespaces or with the VS Code Dev Containers extension, that part will be done for you.)
+3. Login to Azure:
 
     ```shell
-    azd init
+    azd auth login
     ```
 
-    It will prompt you to provide a name (like "flask-app") that will later be used in the name of the deployed resources.
-    
-3. Provision and deploy all the resources:
+4. Provision and deploy all the resources:
 
     ```shell
     azd up
     ```
 
-    It will prompt you to login, pick a subscription, and provide a location (like "eastus"). Then it will provision the resources in your account and deploy the latest code. If you get an error with deployment, changing the location (like to "centralus") can help, as there are availability constraints for some of the resources.
+    It will prompt you to provide an `azd` environment name (like "flask-app"), select a subscription from your Azure account, and select a location (like "eastus"). Then it will provision the resources in your account and deploy the latest code. If you get an error with deployment, changing the location can help, as there may be availability constraints for some of the resources.
 
-4. When `azd` has finished deploying, you'll see an endpoint URI in the command output. Visit that URI, and you should see the front page of the app! 🎉
+5. When `azd` has finished deploying, you'll see an endpoint URI in the command output. Visit that URI, and you should see the front page of the app! 🎉
 
-5. When you've made any changes to the app code, you can just run:
+6. When you've made any changes to the app code, you can just run:
 
     ```shell
     azd deploy
@@ -97,12 +98,21 @@ azd pipeline config
 
 ### Costs
 
-These are only provided as an example, as of Feb-2023. The PostgreSQL server has an hourly cost, so if you are not actively using the app, remember to run `azd down` or delete the resource group to avoid unnecessary costs.
+Pricing varies per region and usage, so it isn't possible to predict exact costs for your usage.
+Some of the Azure resources used in this infrastructure are on usage-based pricing tiers,
+but the Azure Database for PostgreSQL flexible server and Container Registry have fixed hourly costs.
 
-- Azure Container App - Consumption tier with 0.5 CPU, 1GiB memory/storage. Pricing is based on resource allocation, and each month allows for a certain amount of free usage. [Pricing](https://azure.microsoft.com/pricing/details/container-apps/)
-- Azure Container Registry - Basic tier. $0.167/day, ~$5/month. [Pricing](https://azure.microsoft.com/pricing/details/container-registry/)
-- Azure Database for PostgreSQL flexible server - Burstable tier (B1ms). $0.017/hour or ~$12.41/month. [Pricing](https://azure.microsoft.com/pricing/details/postgresql/flexible-server/)
-- Key Vault - Standard tier. $0.04/10,000 transactions. Only a few transactions are used on each deploy. [Pricing](https://azure.microsoft.com/pricing/details/key-vault/)
+You can try the [Azure pricing calculator](https://azure.com/e/3a9a0464f7a4431d82ee859b53ebe179) for the resources:
+
+- Azure Container App: Consumption tier with 0.5 CPU, 1GiB memory/storage. Pricing is based on resource allocation, and each month allows for a certain amount of free usage. [Pricing](https://azure.microsoft.com/pricing/details/container-apps/)
+- Azure Container Registry: Basic tier. [Pricing](https://azure.microsoft.com/pricing/details/container-registry/)
+- Azure Database for PostgreSQL flexible server - Burstable tier (B1ms). [Pricing](https://azure.microsoft.com/pricing/details/postgresql/flexible-server/)
+- Key Vault - Standard tier. Pricing based on number of operations, only a few are used on each deploy. [Pricing](https://azure.microsoft.com/pricing/details/key-vault/)
+- Log analytics: Pay-as-you-go tier. Costs based on data ingested. [Pricing](https://azure.microsoft.com/pricing/details/monitor/)
+
+⚠️ To avoid unnecessary costs, remember to take down your app if it's no longer in use,
+either by deleting the resource group in the Portal or running `azd down`.
+
 
 ## Getting help
 
