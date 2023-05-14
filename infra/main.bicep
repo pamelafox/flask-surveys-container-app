@@ -17,8 +17,7 @@ param postgresPassword string
 @description('Flask secret')
 param flaskSecret string
 
-@description('The image name for the web service')
-param webImageName string = ''
+param webAppExists bool = false
 
 @description('Id of the user or app to assign application roles')
 param principalId string = ''
@@ -45,6 +44,15 @@ module keyVault './core/security/keyvault.bicep' = {
     name: '${replace(take(prefix, 17), '-', '')}-vault'
     location: location
     tags: tags
+  }
+}
+
+// Give the principal access to KeyVault
+module principalKeyVaultAccess './core/security/keyvault-access.bicep' = {
+  name: 'keyvault-access-${principalId}'
+  scope: resourceGroup
+  params: {
+    keyVaultName: keyVault.outputs.name
     principalId: principalId
   }
 }
@@ -88,6 +96,7 @@ module containerApps 'core/host/container-apps.bicep' = {
   params: {
     name: 'app'
     location: location
+    tags: tags
     containerAppsEnvironmentName: '${prefix}-containerapps-env'
     containerRegistryName: '${replace(prefix, '-', '')}registry'
     logAnalyticsWorkspaceName: logAnalyticsWorkspace.outputs.name
@@ -99,15 +108,18 @@ module web 'web.bicep' = {
   name: 'web'
   scope: resourceGroup
   params: {
-    name: '${take(prefix,19)}-containerapp'
+    name: replace('${take(prefix,19)}-ca', '--', '-')
     location: location
-    imageName: webImageName
+    tags: tags
+    identityName: '${prefix}-id-web'
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
-    keyVaultName: keyVault.outputs.name
     postgresDomainName: postgresServer.outputs.POSTGRES_DOMAIN_NAME
     postgresUser: postgresUser
     postgresDatabaseName: postgresDatabaseName
+    postgresPassword: postgresPassword
+    flaskSecret: flaskSecret
+    exists: webAppExists
   }
 }
 
