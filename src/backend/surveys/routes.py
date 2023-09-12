@@ -1,4 +1,5 @@
 from flask import redirect, render_template, request, url_for
+from sqlalchemy import select
 
 from backend import db
 from backend.surveys import bp
@@ -12,7 +13,7 @@ def index():
 
 @bp.route("/surveys", methods=["GET"])
 def surveys_list_page():
-    surveys = Survey.query.all()
+    surveys = db.session.execute(select(Survey)).scalars().all()
     return render_template("surveys_list.html", surveys=surveys)
 
 
@@ -39,8 +40,8 @@ def surveys_create_handler():
 
 @bp.route("/surveys/<int:survey_id>", methods=["GET"])
 def survey_page(survey_id):
-    survey = Survey.query.where(Survey.id == survey_id).first()
-    answers = Survey.query.where(Answer.survey == survey_id)
+    survey = db.get_or_404(Survey, survey_id)
+    answers = db.session.execute(select(Survey).where(Answer.survey == survey_id)).scalars().all()
     return render_template(
         "survey_details.html",
         survey=survey,
