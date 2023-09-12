@@ -1,5 +1,6 @@
 # Test the routes in routes.py using pytest
 import pytest
+from sqlalchemy import func, select
 from werkzeug.datastructures import ImmutableMultiDict
 
 import backend.surveys.models as models
@@ -50,7 +51,7 @@ def test_surveys_create_handler(client, session):
         },
     )
     # Find the created survey in the database
-    survey = session.query(models.Survey).filter_by(topic="colors").first()
+    survey = session.scalars(select(models.Survey).filter_by(topic="colors").limit(1)).first()
     # Make sure it redirected to that survey
     assert resp.status_code == 302
     assert resp.location == f"/surveys/{survey.id}"
@@ -65,7 +66,7 @@ def test_survey_page(client, fake_survey):
 def test_answers_create_handler_first(client, session, fake_survey):
     resp = client.post(f"/surveys/{fake_survey.id}/answers", data={"option": " chocolate\n"})
     # Find the created answer in the database
-    answer = session.query(models.Answer).filter_by(survey=fake_survey.id).first()
+    answer = session.scalars(select(models.Answer).filter_by(survey=fake_survey.id).limit(1)).first()
     # Make sure it stripped the whitespace
     assert answer.selected_option == "chocolate"
     # Make sure it redirected to the associated survey
@@ -80,7 +81,9 @@ def test_answers_create_handler_second(client, session, fake_survey):
     client.set_cookie(models.Survey.cookie_for_id(fake_survey.id), "answered")
     resp = client.post(f"/surveys/{fake_survey.id}/answers", data={"option": "strawberry"})
     # Count matching answers in the database
-    answer_count = session.query(models.Answer).filter_by(selected_option="strawberry").count()
+    answer_count = session.scalar(
+        select(func.count()).select_from(select(models.Answer).filter_by(selected_option="strawberry"))
+    )
     # Make sure that no answer was made
     assert answer_count == 0
     # Make sure it redirects to the associated survey
@@ -99,7 +102,7 @@ def test_surveys_multiple_allowed(client, session):
         },
     )
     # Find the created survey in the database
-    survey = session.query(models.Survey).filter_by(topic="pets").first()
+    survey = session.scalars(select(models.Survey).filter_by(topic="pets").limit(1)).first()
     # Make sure it redirected to that survey
     assert resp.status_code == 302
     assert resp.location == f"/surveys/{survey.id}"
@@ -109,5 +112,5 @@ def test_surveys_multiple_allowed(client, session):
         f"/surveys/{survey.id}/answers", data=ImmutableMultiDict([("option", "zebra"), ("option", "horse")])
     )
     # Count matching answers in the database
-    answer_count = session.query(models.Answer).filter_by(survey=survey.id).count()
+    answer_count = session.scalar(select(func.count()).select_from(select(models.Answer).filter_by(survey=survey.id)))
     assert answer_count == 2

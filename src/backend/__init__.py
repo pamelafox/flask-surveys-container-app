@@ -4,8 +4,14 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
+from sqlalchemy.orm import DeclarativeBase
 
-db = SQLAlchemy()
+
+class BaseModel(DeclarativeBase):
+    pass
+
+
+db = SQLAlchemy(model_class=BaseModel)
 migrate = Migrate()
 csrf = CSRFProtect()
 

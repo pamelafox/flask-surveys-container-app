@@ -1,17 +1,17 @@
 import logging
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import ForeignKey, String, func, select
+from sqlalchemy.orm import Mapped, mapped_column
 
 from backend import db
 
 
 class Survey(db.Model):
-    __tablename__ = "survey"
-    id = Column(Integer, primary_key=True)
-    topic = Column(String(50))
-    question = Column(String(150))
-    options = Column(String(500))  # New-line separated options
-    multiple_allowed = Column(Boolean, default=False)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    topic: Mapped[str] = mapped_column(String(50))
+    question: Mapped[str] = mapped_column(String(150))
+    options: Mapped[str] = mapped_column(String(500))  # New-line separated options
+    multiple_allowed: Mapped[bool] = mapped_column(default=False)
 
     @property
     def options_list(self):
@@ -19,7 +19,7 @@ class Survey(db.Model):
 
     @property
     def answer_count(self):
-        return Answer.query.filter_by(survey=self.id).count()
+        return db.session.scalar(select(func.count(Answer.id)))
 
     @property
     def input_type(self):
@@ -30,7 +30,8 @@ class Survey(db.Model):
         """Returns a dictionary of option counts"""
         answer_count = self.answer_count
         option_count = {option: {"count": 0, "percent": 0} for option in self.options_list}
-        for answer in Answer.query.filter_by(survey=self.id):
+        answers = db.session.execute(select(Answer.selected_option).filter_by(survey=self.id))
+        for answer in answers:
             if answer.selected_option in option_count:
                 option_count[answer.selected_option]["count"] += 1
                 option_count[answer.selected_option]["percent"] = round(
@@ -47,7 +48,6 @@ class Survey(db.Model):
 
 
 class Answer(db.Model):
-    __tablename__ = "answer"
-    id = Column(Integer, primary_key=True)
-    survey = Column(Integer, ForeignKey("survey.id", ondelete="CASCADE"))
-    selected_option = Column(String(500))
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    survey: Mapped[int] = mapped_column(ForeignKey("survey.id", ondelete="CASCADE"))
+    selected_option: Mapped[str] = mapped_column(String(500))

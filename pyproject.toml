@@ -20,7 +20,7 @@ force-exclude = '''
 '''
 
 [tool.pytest.ini_options]
-addopts = "-ra --cov=backend"
+addopts = "-ra --cov=src/backend"
 testpaths = [
   "src/backend/tests"
 ]
