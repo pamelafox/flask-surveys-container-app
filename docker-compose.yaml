@@ -21,8 +21,6 @@ services:
     entrypoint: /code/entrypoint-dev.sh
     env_file:
       - .env
-    environment:
-      DBHOST: db
     ports:
       - 50505:50505
     volumes:
