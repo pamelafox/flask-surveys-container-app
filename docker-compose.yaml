@@ -2,8 +2,6 @@ services:
   db:
     image: postgres
     restart: always
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_PASSWORD: ${DBPASS:?database password not set}
       POSTGRES_USER: ${DBUSER:?database user not set}
@@ -15,6 +13,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - postgres-net
   app:
     build:
       context: ./src
@@ -28,5 +28,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - postgres-net
+
 volumes:
  postgres-data:
+
+networks:
+  postgres-net:
