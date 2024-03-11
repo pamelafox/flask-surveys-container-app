@@ -1,5 +1,5 @@
 Flask==3.0.2
-Flask-Migrate==4.0.5
+Flask-Migrate==4.0.6
 Flask-SQLAlchemy==3.1.1
 Flask-WTF==1.2.1
 psycopg2==2.9.9
