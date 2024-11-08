@@ -65,7 +65,7 @@ def test_survey_page(client, fake_survey):
 
 
 def test_survey_page_missing(client):
-    resp = client.get("/surveys/totes-dont-exist")
+    resp = client.get("/surveys/12313")
     assert resp.status_code == 404
 
 
