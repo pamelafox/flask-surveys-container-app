@@ -35,7 +35,7 @@
           <th>Percentage</th>
         </tr>
       <tbody>
-      {% for option, stats in survey.option_stats.items() %}
+      {% for option, stats in option_stats.items() %}
         <tr>
           <td>{{ option }}</td>
           <td>{{ stats["count"] }}</td>

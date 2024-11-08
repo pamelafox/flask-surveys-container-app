@@ -1,22 +1,18 @@
 import os
 
 from flask import Flask
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
+from flask_alembic import Alembic
+from flask_sqlalchemy_lite import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-from sqlalchemy.orm import DeclarativeBase
 
+from .base_model import BaseModel
 
-class BaseModel(DeclarativeBase):
-    pass
-
-
-db = SQLAlchemy(model_class=BaseModel)
-migrate = Migrate()
+db = SQLAlchemy()
+alembic = Alembic(metadatas=BaseModel.metadata)
 csrf = CSRFProtect()
 
 
-def create_app(config=None):
+def create_app(config=None, testing=False):
     app = Flask(__name__)
 
     # If RUNNING_IN_PRODUCTION is defined, then we're running on Azure
@@ -26,15 +22,19 @@ def create_app(config=None):
     else:  # pragma: no cover
         print("Loading settings.production")
         app.config.from_object("backend.settings.production")
+    database_uri = app.config.get("DATABASE_URI")
+    if testing:
+        # Replace the database name with a test database
+        database_uri = database_uri.rsplit("/", 1)[0] + "/test"
     app.config.update(
-        SQLALCHEMY_DATABASE_URI=app.config.get("DATABASE_URI"),
+        SQLALCHEMY_ENGINES={"default": database_uri},
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
     )
     if config:
         app.config.update(config)
 
     db.init_app(app)
-    migrate.init_app(app, db)
+    alembic.init_app(app)
     csrf.init_app(app)
 
     from backend.surveys import bp as surveys_bp

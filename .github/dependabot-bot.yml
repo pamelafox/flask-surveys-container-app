@@ -1,7 +1,7 @@
 safe:
  - Flask
- - Flask-Migrate
- - Flask-SQLAlchemy
+ - Flask-Alembic
+ - Flask-SQLAlchemy-Lite
  - Flask-WTF
  - psycopg2
  - python-dotenv

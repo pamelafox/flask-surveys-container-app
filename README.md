@@ -1,11 +1,11 @@
+# Flask surveys container app
+
 [![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=brightgreen&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=pamelafox%2Fflask-surveys-container-app&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
 [![Open in Remote - Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Remote%20-%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com%2Fpamelafox%2Fflask-surveys-container-app)
 
-# Flask surveys container app
-
 This repository includes a Flask surveys app that uses [SQLAlchemy](https://www.sqlalchemy.org/)
-(via [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/)
-and [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/index.html))
+(via [Flask-SQLAlchemy-Lite](https://flask-sqlalchemy-lite.readthedocs.io/)
+and [Flask-Alembic](https://flask-alembic.readthedocs.io/))
 to interact with a PostgreSQL database.
 
 ![Screenshot of surveys app, showing a survey about ice cream with four options and percentage bars](readme_screenshot.png)
@@ -52,7 +52,7 @@ Since this app depends on a database, there's a `docker-compose.yaml` file that 
     docker-compose up --build
     ```
 
-4. Try creating a new survey and answering your newly created survey. 📋 🎉
+4. Navigate to localhost:50505 on your machine. Try creating a new survey and answering your newly created survey. 📋 🎉
 
 ## Deployment
 
@@ -104,15 +104,32 @@ but the Azure Database for PostgreSQL flexible server and Container Registry hav
 
 You can try the [Azure pricing calculator](https://azure.com/e/3a9a0464f7a4431d82ee859b53ebe179) for the resources:
 
-- Azure Container App: Consumption tier with 0.5 CPU, 1GiB memory/storage. Pricing is based on resource allocation, and each month allows for a certain amount of free usage. [Pricing](https://azure.microsoft.com/pricing/details/container-apps/)
-- Azure Container Registry: Basic tier. [Pricing](https://azure.microsoft.com/pricing/details/container-registry/)
-- Azure Database for PostgreSQL flexible server - Burstable tier (B1ms). [Pricing](https://azure.microsoft.com/pricing/details/postgresql/flexible-server/)
-- Key Vault - Standard tier. Pricing based on number of operations, only a few are used on each deploy. [Pricing](https://azure.microsoft.com/pricing/details/key-vault/)
-- Log analytics: Pay-as-you-go tier. Costs based on data ingested. [Pricing](https://azure.microsoft.com/pricing/details/monitor/)
+* Azure Container App: Consumption tier with 0.5 CPU, 1GiB memory/storage. Pricing is based on resource allocation, and each month allows for a certain amount of free usage. [Pricing](https://azure.microsoft.com/pricing/details/container-apps/)
+* Azure Container Registry: Basic tier. [Pricing](https://azure.microsoft.com/pricing/details/container-registry/)
+* Azure Database for PostgreSQL flexible server - Burstable tier (B1ms). [Pricing](https://azure.microsoft.com/pricing/details/postgresql/flexible-server/)
+* Key Vault - Standard tier. Pricing based on number of operations, only a few are used on each deploy. [Pricing](https://azure.microsoft.com/pricing/details/key-vault/)
+* Log analytics: Pay-as-you-go tier. Costs based on data ingested. [Pricing](https://azure.microsoft.com/pricing/details/monitor/)
 
 ⚠️ To avoid unnecessary costs, remember to take down your app if it's no longer in use,
 either by deleting the resource group in the Portal or running `azd down`.
 
+## Database model changes
+
+If you add any new models or make changes to the database schema, you'll need to run [Flask-Alembic](https://flask-alembic.readthedocs.io/en/latest/use/).
+
+Run this command to create a new migration:
+
+```shell
+flask db revision "revision name"
+```
+
+Then run this command to apply the migration:
+
+```shell
+flask db upgrade
+```
+
+You'll need to run the upgrade command on both the local development server (inside the Docker `app` container) and on the deployed Azure server.
 
 ## Getting help
 

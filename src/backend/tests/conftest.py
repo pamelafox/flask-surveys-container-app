@@ -1,52 +1,59 @@
+import typing as t
+
 import pytest
-from sqlalchemy.orm import scoped_session, sessionmaker
+from flask import Flask
+from flask.ctx import AppContext
+from sqlalchemy_utils import create_database, database_exists, drop_database
 
 from backend import create_app
 from backend import db as _db
+from backend.base_model import BaseModel
 
 
-@pytest.fixture(scope="session")
-def app(request):
-    """Session-wide test `Flask` application."""
-    _app = create_app({"WTF_CSRF_ENABLED": False})
+@pytest.fixture(scope="session", autouse=True)
+def _manage_test_database():
+    app = create_app(testing=True)
 
-    # Establish an application context before running the tests.
-    ctx = _app.app_context()
-    ctx.push()
+    with app.app_context():
+        engines = _db.engines
 
-    def teardown():
-        ctx.pop()
+    for engine in engines.values():
+        if database_exists(engine.url):
+            drop_database(engine.url)
+        create_database(engine.url)
 
-    request.addfinalizer(teardown)
-    return _app
+    BaseModel.metadata.create_all(engines["default"])
 
+    yield
 
-@pytest.fixture(scope="session")
-def db(app, request):
-    """Session-wide test database."""
-
-    def teardown():
-        _db.drop_all()
-
-    _db.app = app
-    _db.create_all()
-
-    request.addfinalizer(teardown)
-    return _db
+    for engine in engines.values():
+        drop_database(engine.url)
 
 
-@pytest.fixture(scope="function")
-def session(db, request):
-    """Creates a new database session for a test."""
-    connection = db.engine.connect()
-    transaction = connection.begin()
+@pytest.fixture
+def app():
+    app = create_app(config={"WTF_CSRF_ENABLED": False}, testing=True)
 
-    db.session = scoped_session(session_factory=sessionmaker(bind=connection))
+    with app.app_context():
+        engines = _db.engines
 
-    def teardown():
+    cleanup = []
+
+    for key, engine in engines.items():
+        connection = engine.connect()
+        transaction = connection.begin()
+        engines[key] = connection
+        cleanup.append((key, engine, connection, transaction))
+
+    yield app
+
+    for key, engine, connection, transaction in cleanup:
         transaction.rollback()
         connection.close()
-        db.session.remove()
+        engines[key] = engine
 
-    request.addfinalizer(teardown)
-    return db.session
+
+@pytest.fixture
+def app_ctx(app: Flask) -> t.Iterator[AppContext]:
+    with app.app_context() as ctx:
+        yield ctx
