@@ -64,6 +64,11 @@ def test_survey_page(client, fake_survey):
     assert fake_survey.topic in str(resp.data)
 
 
+def test_survey_page_missing(client):
+    resp = client.get("/surveys/totes-dont-exist")
+    assert resp.status_code == 404
+
+
 def test_answers_create_handler_first(client, fake_survey):
     resp = client.post(f"/surveys/{fake_survey.id}/answers", data={"option": " chocolate\n"})
     # Find the created answer in the database
