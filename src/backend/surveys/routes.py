@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, url_for
+from flask import abort, redirect, render_template, request, url_for
 from sqlalchemy import select
 
 from backend import db
@@ -40,12 +40,16 @@ def surveys_create_handler():
 
 @bp.route("/surveys/<int:survey_id>", methods=["GET"])
 def survey_page(survey_id):
-    survey = db.get_or_404(Survey, survey_id)
+    survey = db.session.get(Survey, survey_id)
+    if survey is None:
+        abort(404, description="Survey not found")
     answers = db.session.execute(select(Survey).join(Answer).where(Answer.survey == survey_id)).scalars().all()
+    option_stats = survey.query_option_stats(db.session)
     return render_template(
         "survey_details.html",
         survey=survey,
         answers=answers,
+        option_stats=option_stats,
         already_voted=Survey.cookie_for_id(survey_id) in request.cookies,
     )
 

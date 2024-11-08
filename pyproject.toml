@@ -3,19 +3,20 @@ select = ["E", "F", "I", "UP"]
 target-version = "py311"
 line-length = 120
 src = ["src"]
+extend-exclude = ["src/backend/migrations"]
 
 [tool.black]
 target-version =  ["py311"]
 line-length = 120
 extend-exclude = '''
 (
-  ^/src/migrations\/
+  ^/src/backend/migrations\/
 )
 '''
 force-exclude = '''
 # Needed for pre-commit
 (
-  ^/src/migrations\/
+  ^/src/backend/migrations\/
 )
 '''
 
