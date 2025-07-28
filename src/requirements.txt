@@ -7,5 +7,4 @@ python-dotenv==0.21.1 # Pinned lower due to docker-compose incompatibility
 SQLAlchemy==2.0.34
 gunicorn==22.0.0
 # Dependency pins to resolve urllib3/requests conflict
-requests>=2.28.0
-urllib3>=1.26.0,<3.0.0
+urllib3<1.27
