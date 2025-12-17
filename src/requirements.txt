@@ -4,5 +4,5 @@ Flask-SQLAlchemy==3.1.1
 Flask-WTF==1.2.2
 psycopg2==2.9.11
 python-dotenv==1.2.1 # Pinned lower due to docker-compose incompatibility
-SQLAlchemy==2.0.44
+SQLAlchemy==2.0.45
 gunicorn==23.0.0
